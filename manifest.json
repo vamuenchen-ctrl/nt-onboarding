@@ -1,6 +1,6 @@
 {
     "name": "Gemeinsam mehr bewegen - Onboarding",
-    "short_name": "NT Onboarding",
+    "short_name": "GMB Onboarding",
     "description": "Onboarding-App für neue FrischepartnerInnen",
     "start_url": "./index.html",
     "display": "standalone",
