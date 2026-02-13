@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gemeinsam mehr bewegen - Onboarding</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2d6a4f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <!-- Keine externen Abhängigkeiten - alles läuft lokal -->
+    <style>
+        :root {
+            --primary: #2d6a4f;
+            --primary-light: #40916c;
+            --primary-lighter: #52b788;
+            --primary-lightest: #b7e4c7;
+            --primary-bg: #d8f3dc;
+            --accent: #CC4B37;
+            --accent-light: #e07460;
+            --text: #1b4332;
+            --text-light: #555;
+            --bg: #f0faf4;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #e8e8e8;
+            --gray-300: #ccc;
+            --shadow: 0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== LOGIN / WELCOME SCREEN ========== */
+        .screen { display: none; min-height: 100vh; }
+        .screen.active { display: flex; flex-direction: column; }
+
+        #loginScreen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary-lighter) 100%);
+            padding: 2rem;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .login-logo {
+            width: 80px; height: 80px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-form { width: 100%; max-width: 360px; }
+
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            opacity: 0.9;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.15);
+            color: var(--white);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input::placeholder { color: rgba(255,255,255,0.6); }
+        .input-group input:focus { border-color: rgba(255,255,255,0.7); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--primary);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+
+        .btn-start {
+            background: var(--white);
+            color: var(--primary);
+        }
+        .btn-start:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+
+        /* ========== MAIN APP ========== */
+        .app-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 1.2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .user-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: var(--primary-lighter);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .header-greeting {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        /* Overall progress bar */
+        .overall-progress {
+            background: rgba(255,255,255,0.15);
+            border-radius: 999px;
+            height: 8px;
+            margin-top: 0.6rem;
+            overflow: hidden;
+        }
+
+        .overall-progress-bar {
+            height: 100%;
+            background: var(--primary-lightest);
+            border-radius: 999px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+
+        /* ========== NAVIGATION TABS ========== */
+        .nav-tabs {
+            display: flex;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* ========== CONTENT ========== */
+        .content {
+            flex: 1;
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Board link to main boards page */
+        .boards-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .boards-link:hover { background: var(--primary-lightest); }
+
+        /* Module card */
+        .module-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .module-header:hover { background: var(--gray-100); }
+
+        .module-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+
+        .module-number {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .module-number.completed {
+            background: var(--primary-lighter);
+        }
+
+        .module-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .module-progress-text {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+
+        .module-chevron {
+            font-size: 1.2rem;
+            color: var(--gray-300);
+            transition: transform 0.3s;
+        }
+
+        .module-card.open .module-chevron {
+            transform: rotate(90deg);
+        }
+
+        .module-progress-bar {
+            height: 4px;
+            background: var(--gray-200);
+        }
+
+        .module-progress-fill {
+            height: 100%;
+            background: var(--primary-lighter);
+            transition: width 0.5s ease;
+        }
+
+        /* Tasks list */
+        .tasks-list {
+            display: none;
+            padding: 0.5rem 0;
+        }
+
+        .module-card.open .tasks-list {
+            display: block;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.2rem;
+            border-top: 1px solid var(--gray-100);
+            transition: background 0.15s;
+        }
+
+        .task-item:hover { background: var(--gray-100); }
+
+        .task-checkbox {
+            width: 22px; height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .task-checkbox.checked {
+            background: var(--primary-lighter);
+            border-color: var(--primary-lighter);
+            color: var(--white);
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .task-link {
+            flex: 1;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-item.completed .task-link {
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .task-external {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* ========== DAILY BUSINESS PLACEHOLDER ========== */
+        .placeholder-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.2rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .placeholder-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--gray-200);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .placeholder-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .placeholder-badge {
+            margin-left: auto;
+            font-size: 0.7rem;
+            background: var(--gray-200);
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            color: var(--text-light);
+        }
+
+        /* ========== USER MENU ========== */
+        .user-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 200;
+        }
+
+        .user-menu.active { display: block; }
+
+        .user-menu-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+        }
+
+        .user-menu-content {
+            position: absolute;
+            top: 60px;
+            right: 1rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 0.5rem;
+            min-width: 220px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            color: var(--text);
+        }
+        .menu-item:hover { background: var(--gray-100); }
+        .menu-item.danger { color: var(--accent); }
+
+        .menu-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 0.25rem 0;
+        }
+
+        /* ========== PWA INSTALL BANNER ========== */
+        .install-banner {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 1.2rem;
+            z-index: 150;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+        }
+
+        .install-banner.show { display: flex; align-items: center; gap: 1rem; }
+
+        .install-banner-text { flex: 1; font-size: 0.85rem; }
+        .install-banner .btn {
+            width: auto;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .install-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes checkPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .task-checkbox.animate {
+            animation: checkPop 0.3s ease;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (min-width: 768px) {
+            .content { padding: 1.5rem; }
+            .login-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== LOGIN SCREEN ========== -->
+<div id="loginScreen" class="screen active">
+    <div class="login-logo">🌿</div>
+    <h1 class="login-title">Gemeinsam mehr bewegen</h1>
+    <p class="login-subtitle">Onboarding für neue FrischepartnerInnen</p>
+
+    <div class="login-form">
+        <div class="input-group">
+            <label for="guestName">Dein Vorname</label>
+            <input type="text" id="guestName" placeholder="z.B. Anna">
+        </div>
+
+        <button class="btn btn-start" id="btnStart">Los geht's!</button>
+    </div>
+</div>
+
+<!-- ========== MAIN APP SCREEN ========== -->
+<div id="appScreen" class="screen">
+    <header class="app-header">
+        <div class="header-top">
+            <div>
+                <div class="header-title">Gemeinsam mehr bewegen</div>
+                <div class="header-greeting" id="greetingText">Hallo!</div>
+            </div>
+            <div class="header-user">
+                <div class="user-avatar" id="userAvatar" title="Menü">?</div>
+            </div>
+        </div>
+        <div class="overall-progress">
+            <div class="overall-progress-bar" id="overallBar" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="overallText">0 % abgeschlossen</div>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="onboarding">Onboarding</button>
+        <button class="nav-tab" data-tab="daily">Daily Business</button>
+    </div>
+
+    <div class="content" id="contentArea"></div>
+</div>
+
+<!-- ========== USER MENU ========== -->
+<div class="user-menu" id="userMenu">
+    <div class="user-menu-overlay" id="menuOverlay"></div>
+    <div class="user-menu-content">
+        <div class="menu-item" id="menuUser" style="font-weight:600;cursor:default;"></div>
+        <div class="menu-divider"></div>
+        <button class="menu-item" id="menuBoards">📋 Boards öffnen</button>
+        <button class="menu-item" id="menuReset">🔄 Fortschritt zurücksetzen</button>
+        <div class="menu-divider"></div>
+        <button class="menu-item danger" id="menuLogout">🚪 Abmelden</button>
+    </div>
+</div>
+
+<!-- ========== PWA INSTALL BANNER ========== -->
+<div class="install-banner" id="installBanner">
+    <div class="install-banner-text">App zum Homescreen hinzufügen für schnellen Zugriff!</div>
+    <button class="btn btn-primary" id="btnInstall">Installieren</button>
+    <button class="install-close" id="btnInstallClose">✕</button>
+</div>
+
+<script>
+// ==================== APP DATA ====================
+const APP_DATA = {
+    boardsLinks: {
+        onboarding: 'https://app.boards.com/boards/zT8Tl.RqelPZ',
+        daily: 'https://app.boards.com/boards/zT8Tl.RqelPZ'
+    },
+    onboarding: [
+        {
+            id: 'mod1',
+            number: 1,
+            title: 'FRESH START',
+            tasks: [
+                { id: 'mod1_1', title: 'Willkommen bei RINGANA', url: 'https://boards.com/a/zT8Tl.fCJOc2' },
+                { id: 'mod1_2', title: 'Willkommen bei den Naturtalenten', url: 'https://boards.com/a/zT8Tl.VLBjzJ' },
+                { id: 'mod1_3', title: 'Die Ringana Partnerschaft', url: 'https://boards.com/a/zT8Tl.gfshgf' },
+                { id: 'mod1_4', title: 'Starterunterlagen', url: 'https://boards.com/a/zT8Tl.XOmhuV' },
+                { id: 'mod1_5', title: 'Founder Bonus Sets', url: 'https://boards.com/a/zT8Tl.Z4biND' },
+                { id: 'mod1_6', title: 'Produktwelt von RINGANA', url: 'https://boards.com/a/zT8Tl.GQv1ae' },
+                { id: 'mod1_7', title: 'Fast Track Bonus', url: 'https://boards.com/a/zT8Tl.3ArOhf' },
+                { id: 'mod1_8', title: 'Erste Kunden anlegen', url: 'https://boards.com/a/zT8Tl.2FYqTt' }
+            ]
+        },
+        {
+            id: 'mod2',
+            number: 2,
+            title: 'ALL ABOUT RINGANA',
+            tasks: [
+                { id: 'mod2_1', title: 'RINGANA ist besonders', url: 'https://boards.com/a/zT8Tl.gpSau6' },
+                { id: 'mod2_2', title: 'Welcome Calls', url: 'https://boards.com/a/zT8Tl.bZjmPO' },
+                { id: 'mod2_3', title: 'Online Academy', url: 'https://boards.com/a/zT8Tl.N7thIS' },
+                { id: 'mod2_4', title: 'Deine Vision', url: 'https://boards.com/a/zT8Tl.2jiTst' },
+                { id: 'mod2_5', title: 'Knowledgebase', url: 'https://boards.com/a/zT8Tl.hTGXMd' }
+            ]
+        },
+        {
+            id: 'mod3',
+            number: 3,
+            title: "LET'S GO!",
+            tasks: [
+                { id: 'mod3_1', title: 'NT Online Calls', url: 'https://boards.com/a/zT8Tl.XmnX6E' },
+                { id: 'mod3_2', title: 'Was sind EPAs?', url: 'https://boards.com/a/zT8Tl.Ta3P6F' },
+                { id: 'mod3_3', title: 'Kontakten', url: 'https://boards.com/a/zT8Tl.aCfFOS' },
+                { id: 'mod3_4', title: 'FRESH Dates', url: 'https://boards.com/a/zT8Tl.InrS0J' },
+                { id: 'mod3_5', title: 'Bestellungen machen', url: 'https://boards.com/a/zT8Tl.3vHgAM' },
+                { id: 'mod3_6', title: 'Digital Vouchers', url: 'https://boards.com/a/zT8Tl.nKrVih' },
+                { id: 'mod3_7', title: 'Weitere Gutscheine', url: 'https://boards.com/a/zT8Tl.Zgi7FI' },
+                { id: 'mod3_8', title: 'Sammelbestellung', url: 'https://boards.com/a/zT8Tl.2IfQAS' },
+                { id: 'mod3_9', title: 'Versandkosten', url: 'https://boards.com/a/zT8Tl.7CVQnm' },
+                { id: 'mod3_10', title: 'Business Meeting', url: 'https://boards.com/a/zT8Tl.h6RAed' },
+                { id: 'mod3_11', title: 'Partner anlegen', url: 'https://boards.com/a/zT8Tl.uRTghK' },
+                { id: 'mod3_12', title: 'Meine ersten 500€', url: 'https://boards.com/a/zT8Tl.uD6mqH' },
+                { id: 'mod3_13', title: 'Samples verschenken', url: 'https://boards.com/a/zT8Tl.9uXhfl' },
+                { id: 'mod3_14', title: 'Einkommensflow', url: 'https://boards.com/a/zT8Tl.17YLyu' }
+            ]
+        },
+        {
+            id: 'mod4',
+            number: 4,
+            title: 'PARTNER JOURNEY',
+            tasks: [
+                { id: 'mod4_1', title: 'Welcome Call', url: 'https://boards.com/a/zT8Tl.9r93jv' },
+                { id: 'mod4_2', title: 'RUN 3 - Become an insider', url: 'https://boards.com/a/zT8Tl.QCc2Mx' },
+                { id: 'mod4_3', title: 'RUN 5 - Become a mentor', url: 'https://boards.com/a/zT8Tl.SzHlJv' },
+                { id: 'mod4_4', title: 'RINGANA Next & Congress', url: 'https://boards.com/a/zT8Tl.3nHAmG' },
+                { id: 'mod4_5', title: 'Dein Partner Webshop', url: 'https://boards.com/a/zT8Tl.M7lrT4' },
+                { id: 'mod4_6', title: 'Targetplan', url: 'https://boards.com/a/zT8Tl.sjAc3y' },
+                { id: 'mod4_7', title: 'Provisionsberechnung', url: 'https://boards.com/a/zT8Tl.401XNx' },
+                { id: 'mod4_8', title: 'Einkommensflow', url: 'https://boards.com/a/fM7v9.Bjfytc?lang=de', external: true }
+            ]
+        },
+        {
+            id: 'mod5',
+            number: 5,
+            title: 'MINDSET',
+            tasks: [
+                { id: 'mod5_1', title: 'Einwände', url: 'https://boards.com/a/zT8Tl.rqvGal' },
+                { id: 'mod5_2', title: 'Glaubenssätze Klassiker', url: 'https://boards.com/a/zT8Tl.dMylW3' },
+                { id: 'mod5_3', title: 'Fokus', url: 'https://boards.com/a/zT8Tl.7nrhAW' },
+                { id: 'mod5_4', title: 'Social Media', url: 'https://boards.com/a/zT8Tl.OOwVn6' },
+                { id: 'mod5_5', title: 'Trust the process', url: 'https://boards.com/a/zT8Tl.iKIEb6' }
+            ]
+        },
+        {
+            id: 'mod6',
+            number: 6,
+            title: "LET'S GROW",
+            tasks: [
+                { id: 'mod6_1', title: 'Dein Self-Check-In', url: 'https://boards.com/a/zT8Tl.t8v6rr' },
+                { id: 'mod6_2', title: 'Teamwork', url: 'https://boards.com/a/zT8Tl.x5oS9A' },
+                { id: 'mod6_3', title: 'Naturtalente Locations', url: 'https://boards.com/a/zT8Tl.N70Jnq' },
+                { id: 'mod6_4', title: 'Teaminterne Coachings', url: 'https://boards.com/a/zT8Tl.vVUatb' },
+                { id: 'mod6_5', title: 'NT Leaders', url: 'https://boards.com/a/zT8Tl.oAMF8f' },
+                { id: 'mod6_6', title: 'Herzlichen Glückwunsch', url: 'https://boards.com/a/zT8Tl.71SrPU' }
+            ]
+        }
+    ],
+    dailyBusiness: [
+        { id: 'db1', title: 'Starte hier', icon: '🚀' },
+        { id: 'db2', title: 'Meine Vision', icon: '🎯' },
+        { id: 'db3', title: 'Kundenaufbau', icon: '👥' },
+        { id: 'db4', title: 'Partneraufbau', icon: '🤝' },
+        { id: 'db5', title: 'Sichtbarkeit', icon: '📣' },
+        { id: 'db6', title: 'EPAs', icon: '📊' },
+        { id: 'db7', title: 'Mindset', icon: '🧠' },
+        { id: 'db8', title: 'Templates, Tools & Links', icon: '🛠️' },
+        { id: 'db9', title: 'Ringana International', icon: '🌍' },
+        { id: 'db10', title: 'Künstliche Intelligenz', icon: '🤖' },
+        { id: 'db11', title: 'Sales Monate', icon: '📅' }
+    ]
+};
+
+// ==================== STATE ====================
+let state = {
+    user: null,         // { name, avatar }
+    completed: {},      // { taskId: true }
+    activeTab: 'onboarding',
+    openModules: {}
+};
+
+// ==================== STORAGE (localStorage) ====================
+function saveProgress() {
+    const data = { completed: state.completed, user: state.user };
+    localStorage.setItem('nt_onboarding', JSON.stringify(data));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('nt_onboarding');
+    if (saved) {
+        const data = JSON.parse(saved);
+        state.completed = data.completed || {};
+        state.user = data.user || null;
+    }
+}
+
+// ==================== AUTH (einfache Namenseingabe) ====================
+function login(name) {
+    state.user = {
+        name: name || 'Gast',
+        avatar: (name || 'G')[0].toUpperCase()
+    };
+    saveProgress();
+    showApp();
+}
+
+function logout() {
+    state.user = null;
+    state.completed = {};
+    localStorage.removeItem('nt_onboarding');
+    showLogin();
+}
+
+// ==================== RENDERING ====================
+function showLogin() {
+    document.getElementById('loginScreen').classList.add('active');
+    document.getElementById('appScreen').classList.remove('active');
+}
+
+function showApp() {
+    document.getElementById('loginScreen').classList.remove('active');
+    document.getElementById('appScreen').classList.add('active');
+    updateHeader();
+    renderContent();
+}
+
+function updateHeader() {
+    if (!state.user) return;
+    const greeting = getGreeting();
+    document.getElementById('greetingText').textContent = `${greeting}, ${state.user.name}!`;
+    document.getElementById('userAvatar').textContent = state.user.avatar;
+    document.getElementById('menuUser').textContent = state.user.name;
+    updateOverallProgress();
+}
+
+function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 12) return 'Guten Morgen';
+    if (h < 18) return 'Hallo';
+    return 'Guten Abend';
+}
+
+function updateOverallProgress() {
+    const total = APP_DATA.onboarding.reduce((sum, m) => sum + m.tasks.length, 0);
+    const done = Object.keys(state.completed).filter(k => state.completed[k]).length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('overallBar').style.width = pct + '%';
+    document.getElementById('overallText').textContent = `${pct} % abgeschlossen (${done}/${total})`;
+}
+
+function renderContent() {
+    const area = document.getElementById('contentArea');
+    if (state.activeTab === 'onboarding') {
+        renderOnboarding(area);
+    } else {
+        renderDailyBusiness(area);
+    }
+}
+
+function renderOnboarding(container) {
+    let html = `<a href="${APP_DATA.boardsLinks.onboarding}" target="_blank" class="boards-link">📋 Alle Boards öffnen ↗</a>`;
+
+    APP_DATA.onboarding.forEach(mod => {
+        const done = mod.tasks.filter(t => state.completed[t.id]).length;
+        const total = mod.tasks.length;
+        const pct = Math.round((done / total) * 100);
+        const isOpen = state.openModules[mod.id] || false;
+        const isCompleted = done === total;
+
+        html += `
+        <div class="module-card ${isOpen ? 'open' : ''}" data-module="${mod.id}">
+            <div class="module-header" onclick="toggleModule('${mod.id}')">
+                <div class="module-info">
+                    <div class="module-number ${isCompleted ? 'completed' : ''}">${isCompleted ? '✓' : mod.number}</div>
+                    <div>
+                        <div class="module-title">Modul ${mod.number} — ${mod.title}</div>
+                        <div class="module-progress-text">${done}/${total} erledigt</div>
+                    </div>
+                </div>
+                <div class="module-chevron">›</div>
+            </div>
+            <div class="module-progress-bar">
+                <div class="module-progress-fill" style="width:${pct}%"></div>
+            </div>
+            <div class="tasks-list">
+                ${mod.tasks.map(task => {
+                    const checked = state.completed[task.id];
+                    return `
+                    <div class="task-item ${checked ? 'completed' : ''}">
+                        <div class="task-checkbox ${checked ? 'checked' : ''}"
+                             onclick="toggleTask('${task.id}', event)"></div>
+                        <a href="${task.url}" target="_blank" class="task-link">
+                            ${task.title}
+                            ${task.external ? '<span class="task-external">extern ↗</span>' : '<span class="task-external">↗</span>'}
+                        </a>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+function renderDailyBusiness(container) {
+    let html = `<a href="${APP_DATA.boardsLinks.daily}" target="_blank" class="boards-link">📋 Alle Boards öffnen ↗</a>`;
+    html += '<p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;">Dieser Bereich wird demnächst mit Inhalten gefüllt.</p>';
+
+    APP_DATA.dailyBusiness.forEach(item => {
+        html += `
+        <div class="placeholder-card">
+            <div class="placeholder-icon">${item.icon}</div>
+            <div class="placeholder-title">${item.title}</div>
+            <div class="placeholder-badge">Demnächst</div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+// ==================== INTERACTIONS ====================
+function toggleModule(moduleId) {
+    state.openModules[moduleId] = !state.openModules[moduleId];
+    renderContent();
+}
+
+function toggleTask(taskId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    state.completed[taskId] = !state.completed[taskId];
+    if (!state.completed[taskId]) delete state.completed[taskId];
+    saveProgress();
+
+    // Animate checkbox
+    const checkbox = event.target;
+    checkbox.classList.add('animate');
+    setTimeout(() => checkbox.classList.remove('animate'), 300);
+
+    renderContent();
+    updateOverallProgress();
+}
+
+// ==================== TAB NAVIGATION ====================
+document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        state.activeTab = tab.dataset.tab;
+        renderContent();
+    });
+});
+
+// ==================== USER MENU ====================
+document.getElementById('userAvatar').addEventListener('click', () => {
+    document.getElementById('userMenu').classList.add('active');
+});
+
+document.getElementById('menuOverlay').addEventListener('click', () => {
+    document.getElementById('userMenu').classList.remove('active');
+});
+
+document.getElementById('menuBoards').addEventListener('click', () => {
+    window.open(APP_DATA.boardsLinks.onboarding, '_blank');
+    document.getElementById('userMenu').classList.remove('active');
+});
+
+document.getElementById('menuReset').addEventListener('click', () => {
+    if (confirm('Möchtest du wirklich deinen gesamten Fortschritt zurücksetzen?')) {
+        state.completed = {};
+        saveProgress();
+        renderContent();
+        updateOverallProgress();
+    }
+    document.getElementById('userMenu').classList.remove('active');
+});
+
+document.getElementById('menuLogout').addEventListener('click', () => {
+    document.getElementById('userMenu').classList.remove('active');
+    logout();
+});
+
+// ==================== LOGIN BUTTON ====================
+document.getElementById('btnStart').addEventListener('click', () => {
+    const name = document.getElementById('guestName').value.trim();
+    if (!name) {
+        document.getElementById('guestName').focus();
+        document.getElementById('guestName').style.borderColor = 'var(--accent)';
+        return;
+    }
+    login(name);
+});
+
+document.getElementById('guestName').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('btnStart').click();
+});
+
+// ==================== PWA INSTALL ====================
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').classList.add('show');
+});
+
+document.getElementById('btnInstall').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+    }
+    document.getElementById('installBanner').classList.remove('show');
+});
+
+document.getElementById('btnInstallClose').addEventListener('click', () => {
+    document.getElementById('installBanner').classList.remove('show');
+});
+
+// ==================== INIT ====================
+function init() {
+    loadProgress();
+    if (state.user) {
+        showApp();
+    } else {
+        showLogin();
+    }
+}
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+init();
+</script>
+</body>
+</html>
