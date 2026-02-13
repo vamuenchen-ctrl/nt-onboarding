@@ -195,10 +195,30 @@
             transition: width 0.5s ease;
         }
 
+        .dual-progress {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.6rem;
+        }
+
+        .dual-progress-item {
+            flex: 1;
+        }
+
+        .dual-progress-label {
+            font-size: 0.7rem;
+            opacity: 0.75;
+            margin-bottom: 0.2rem;
+        }
+
+        .overall-progress-bar.daily {
+            background: var(--accent-light);
+        }
+
         .progress-text {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             opacity: 0.8;
-            margin-top: 0.3rem;
+            margin-top: 0.15rem;
             text-align: right;
         }
 
@@ -559,10 +579,22 @@
                 <div class="user-avatar" id="userAvatar" title="Menü">?</div>
             </div>
         </div>
-        <div class="overall-progress">
-            <div class="overall-progress-bar" id="overallBar" style="width: 0%"></div>
+        <div class="dual-progress">
+            <div class="dual-progress-item">
+                <div class="dual-progress-label">Onboarding</div>
+                <div class="overall-progress">
+                    <div class="overall-progress-bar" id="onboardingBar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="onboardingText">0 %</div>
+            </div>
+            <div class="dual-progress-item">
+                <div class="dual-progress-label">Daily Business</div>
+                <div class="overall-progress">
+                    <div class="overall-progress-bar daily" id="dailyBar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="dailyText">0 %</div>
+            </div>
         </div>
-        <div class="progress-text" id="overallText">0 % abgeschlossen</div>
     </header>
 
     <div class="nav-tabs">
@@ -775,11 +807,19 @@ function getGreeting() {
 }
 
 function updateOverallProgress() {
-    const total = APP_DATA.onboarding.reduce((sum, m) => sum + m.tasks.length, 0);
-    const done = Object.keys(state.completed).filter(k => state.completed[k]).length;
-    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-    document.getElementById('overallBar').style.width = pct + '%';
-    document.getElementById('overallText').textContent = `${pct} % abgeschlossen (${done}/${total})`;
+    // Onboarding progress
+    const obTotal = APP_DATA.onboarding.reduce((sum, m) => sum + m.tasks.length, 0);
+    const obDone = APP_DATA.onboarding.reduce((sum, m) => sum + m.tasks.filter(t => state.completed[t.id]).length, 0);
+    const obPct = obTotal > 0 ? Math.round((obDone / obTotal) * 100) : 0;
+    document.getElementById('onboardingBar').style.width = obPct + '%';
+    document.getElementById('onboardingText').textContent = `${obPct} % (${obDone}/${obTotal})`;
+
+    // Daily Business progress
+    const dbTotal = APP_DATA.dailyBusiness.reduce((sum, s) => sum + (s.tasks ? s.tasks.length : 0), 0);
+    const dbDone = APP_DATA.dailyBusiness.reduce((sum, s) => sum + (s.tasks ? s.tasks.filter(t => state.completed[t.id]).length : 0), 0);
+    const dbPct = dbTotal > 0 ? Math.round((dbDone / dbTotal) * 100) : 0;
+    document.getElementById('dailyBar').style.width = dbPct + '%';
+    document.getElementById('dailyText').textContent = dbTotal > 0 ? `${dbPct} % (${dbDone}/${dbTotal})` : 'Demnächst';
 }
 
 function renderContent() {
@@ -792,7 +832,7 @@ function renderContent() {
 }
 
 function renderOnboarding(container) {
-    let html = `<a href="${APP_DATA.boardsLinks.onboarding}" target="_blank" class="boards-link">📋 Alle Boards öffnen ↗</a>`;
+    let html = '';
 
     APP_DATA.onboarding.forEach(mod => {
         const done = mod.tasks.filter(t => state.completed[t.id]).length;
@@ -833,12 +873,13 @@ function renderOnboarding(container) {
         </div>`;
     });
 
+    html += `<a href="${APP_DATA.boardsLinks.onboarding}" target="_blank" class="boards-link" style="margin-top:0.5rem;">📋 Alle Boards öffnen ↗</a>`;
+
     container.innerHTML = html;
 }
 
 function renderDailyBusiness(container) {
-    let html = `<a href="${APP_DATA.boardsLinks.daily}" target="_blank" class="boards-link">📋 Alle Boards öffnen ↗</a>`;
-    html += '<p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;">Dieser Bereich wird demnächst mit Inhalten gefüllt.</p>';
+    let html = '<p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;">Dieser Bereich wird demnächst mit Inhalten gefüllt.</p>';
 
     APP_DATA.dailyBusiness.forEach(item => {
         html += `
@@ -848,6 +889,8 @@ function renderDailyBusiness(container) {
             <div class="placeholder-badge">Demnächst</div>
         </div>`;
     });
+
+    html += `<a href="${APP_DATA.boardsLinks.daily}" target="_blank" class="boards-link" style="margin-top:0.5rem;">📋 Alle Boards öffnen ↗</a>`;
 
     container.innerHTML = html;
 }
