@@ -629,8 +629,9 @@
 // ==================== APP DATA ====================
 const APP_DATA = {
     boardsLinks: {
-        onboarding: 'https://app.boards.com/boards/zT8Tl.RqelPZ',
-        daily: 'https://app.boards.com/boards/zT8Tl.RqelPZ'
+        startseite: 'https://app.boards.com/boards/zT8Tl.RqelPZ',
+        onboarding: 'https://app.boards.com/boards/zT8Tl.tHBZDM',
+        daily: 'https://app.boards.com/boards/zT8Tl.G8o3Fm'
     },
     onboarding: [
         {
@@ -723,17 +724,125 @@ const APP_DATA = {
         }
     ],
     dailyBusiness: [
-        { id: 'db1', title: 'Starte hier', icon: '🚀' },
-        { id: 'db2', title: 'Meine Vision', icon: '🎯' },
-        { id: 'db3', title: 'Kundenaufbau', icon: '👥' },
-        { id: 'db4', title: 'Partneraufbau', icon: '🤝' },
-        { id: 'db5', title: 'Sichtbarkeit', icon: '📣' },
-        { id: 'db6', title: 'EPAs', icon: '📊' },
-        { id: 'db7', title: 'Mindset', icon: '🧠' },
-        { id: 'db8', title: 'Templates, Tools & Links', icon: '🛠️' },
-        { id: 'db9', title: 'Ringana International', icon: '🌍' },
-        { id: 'db10', title: 'Künstliche Intelligenz', icon: '🤖' },
-        { id: 'db11', title: 'Sales Monate', icon: '📅' }
+        {
+            id: 'db1',
+            title: 'Starte hier',
+            icon: '🚀',
+            tasks: [
+                { id: 'db1_1', title: 'Dein perfekter Start in 25 First Steps', url: 'https://boards.com/a/zT8Tl.7wFlRx' }
+            ]
+        },
+        {
+            id: 'db2',
+            title: 'Meine Vision',
+            icon: '🎯',
+            tasks: [
+                { id: 'db2_1', title: 'Mein Warum definieren', url: 'https://app.boards.com/boards/zT8Tl.aElVg6' },
+                { id: 'db2_2', title: 'Ziele setzen', url: 'https://app.boards.com/boards/zT8Tl.2XHFuF' }
+            ]
+        },
+        {
+            id: 'db3',
+            title: 'Kundenaufbau',
+            icon: '👥',
+            tasks: [
+                { id: 'db3_1', title: 'Produkte', url: 'https://app.boards.com/boards/zT8Tl.Upn08O' },
+                { id: 'db3_2', title: 'Wording für Kunden', url: 'https://app.boards.com/boards/zT8Tl.x8IkMX' },
+                { id: 'db3_3', title: 'Challenges & Aktionen', url: 'https://app.boards.com/boards/zT8Tl.PQoUag' },
+                { id: 'db3_4', title: '1000 Punkte Shop', url: 'https://app.boards.com/boards/zT8Tl.rjKEop' },
+                { id: 'db3_5', title: 'Fresh Date Inspiration', url: 'https://app.boards.com/boards/zT8Tl.K1pz2y' },
+                { id: 'db3_6', title: 'RE-Use', url: 'https://boards.com/a/zT8Tl.rfJI9D' },
+                { id: 'db3_7', title: 'Kundenbetreuung', url: 'https://app.boards.com/boards/zT8Tl.9d6S6g' }
+            ]
+        },
+        {
+            id: 'db4',
+            title: 'Partneraufbau',
+            icon: '🤝',
+            tasks: [
+                { id: 'db4_1', title: 'Network Marketing', url: 'https://app.boards.com/boards/zT8Tl.mKLjH7' },
+                { id: 'db4_2', title: 'Wording für Partner', url: 'https://app.boards.com/boards/zT8Tl.EcrTVG' },
+                { id: 'db4_3', title: 'Mentoring', url: 'https://app.boards.com/boards/zT8Tl.JifPN4' }
+            ]
+        },
+        {
+            id: 'db5',
+            title: 'Sichtbarkeit',
+            icon: '📣',
+            tasks: [
+                { id: 'db5_1', title: 'Storytelling', url: 'https://app.boards.com/boards/zT8Tl.O9BI55' },
+                { id: 'db5_2', title: 'Social Media', url: 'https://app.boards.com/boards/zT8Tl.O9BI55' },
+                { id: 'db5_3', title: 'Personal Branding', url: 'https://app.boards.com/boards/zT8Tl.O9BI55' },
+                { id: 'db5_4', title: 'Sichtbarkeitschallenge', url: 'https://app.boards.com/boards/zT8Tl.O9BI55' },
+                { id: 'db5_5', title: 'Be part of us', url: 'https://app.boards.com/boards/zT8Tl.O9BI55' }
+            ]
+        },
+        {
+            id: 'db6',
+            title: "EPA's",
+            icon: '📊',
+            tasks: [
+                { id: 'db6_1', title: "Was sind echte EPA's", url: 'https://app.boards.com/boards/zT8Tl.qRh2JE' },
+                { id: 'db6_2', title: 'Kontakten & Einladen', url: 'https://app.boards.com/boards/zT8Tl.qRh2JE' },
+                { id: 'db6_3', title: 'Die richtigen Fragen stellen', url: 'https://app.boards.com/boards/zT8Tl.qRh2JE' },
+                { id: 'db6_4', title: 'Follow Up & Dranbleiben', url: 'https://app.boards.com/boards/zT8Tl.QiRh6H' },
+                { id: 'db6_5', title: 'Fokus ON Training', url: 'https://app.boards.com/boards/zT8Tl.qRh2JE' },
+                { id: 'db6_6', title: 'Verkaufen ohne zu verkaufen', url: 'https://app.boards.com/boards/zT8Tl.qRh2JE' }
+            ]
+        },
+        {
+            id: 'db7',
+            title: 'Mindset',
+            icon: '🧠',
+            tasks: [
+                { id: 'db7_1', title: 'Umgang mit Neins', url: 'https://app.boards.com/boards/zT8Tl.IkCmXN' },
+                { id: 'db7_2', title: 'Think Bigger Coaching', url: 'https://app.boards.com/boards/zT8Tl.iD0QF0' },
+                { id: 'db7_3', title: 'Unternehmerbewusstsein', url: 'https://app.boards.com/boards/zT8Tl.nbyvmi' },
+                { id: 'db7_4', title: 'Leadership Skills', url: 'https://app.boards.com/boards/zT8Tl.IkCmXN' },
+                { id: 'db7_5', title: 'Motivation & Wertschätzung', url: 'https://app.boards.com/boards/zT8Tl.IkCmXN' },
+                { id: 'db7_6', title: 'Einwände: wie gehe ich damit um?', url: 'https://youtu.be/VDAYM1X695U' }
+            ]
+        },
+        {
+            id: 'db8',
+            title: 'Templates, Tools & Links',
+            icon: '🛠️',
+            tasks: [
+                { id: 'db8_1', title: 'READY TO POST', url: 'https://app.boards.com/boards/zT8Tl.l2iWlW' },
+                { id: 'db8_2', title: 'Templates & Vorlagen', url: 'https://app.boards.com/boards/zT8Tl.AVWAT9' },
+                { id: 'db8_3', title: 'Links für Interessenten', url: 'https://app.boards.com/boards/zT8Tl.l2iWlW' },
+                { id: 'db8_4', title: 'Links zu Gruppen', url: 'https://app.boards.com/boards/zT8Tl.56XevR' },
+                { id: 'db8_5', title: 'Willkommen für Neupartner', url: 'https://app.boards.com/boards/zT8Tl.XP3P9a' }
+            ]
+        },
+        {
+            id: 'db9',
+            title: 'Ringana International',
+            icon: '🌍',
+            tasks: [
+                { id: 'db9_1', title: 'Frankreich', url: 'https://app.boards.com/boards/zT8Tl.DLEGzf' },
+                { id: 'db9_2', title: 'Türkei', url: 'https://app.boards.com/boards/zT8Tl.DLEGzf' }
+            ]
+        },
+        {
+            id: 'db10',
+            title: 'Künstliche Intelligenz',
+            icon: '🤖',
+            tasks: [
+                { id: 'db10_1', title: 'Chat Bot', url: 'https://app.boards.com/boards/zT8Tl.fdk1Do' },
+                { id: 'db10_2', title: 'Prompts', url: 'https://app.boards.com/boards/zT8Tl.fdk1Do' }
+            ]
+        },
+        {
+            id: 'db11',
+            title: 'Sales Monate',
+            icon: '📅',
+            tasks: [
+                { id: 'db11_1', title: 'SUMMERSALE Templates', url: 'https://app.boards.com/boards/zT8Tl.WXUhGM' },
+                { id: 'db11_2', title: 'X-mas Templates', url: 'https://app.boards.com/boards/zT8Tl.8QzmEc' },
+                { id: 'db11_3', title: 'X-MAS SALE', url: 'https://app.boards.com/boards/zT8Tl.uUF2vh' }
+            ]
+        }
     ]
 };
 
@@ -879,15 +988,56 @@ function renderOnboarding(container) {
 }
 
 function renderDailyBusiness(container) {
-    let html = '<p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;">Dieser Bereich wird demnächst mit Inhalten gefüllt.</p>';
+    let html = '';
 
     APP_DATA.dailyBusiness.forEach(item => {
-        html += `
-        <div class="placeholder-card">
-            <div class="placeholder-icon">${item.icon}</div>
-            <div class="placeholder-title">${item.title}</div>
-            <div class="placeholder-badge">Demnächst</div>
-        </div>`;
+        if (item.tasks && item.tasks.length > 0) {
+            // Echtes Modul mit Aufgaben
+            const done = item.tasks.filter(t => state.completed[t.id]).length;
+            const total = item.tasks.length;
+            const pct = Math.round((done / total) * 100);
+            const isOpen = state.openModules[item.id] || false;
+            const isCompleted = done === total;
+
+            html += `
+            <div class="module-card ${isOpen ? 'open' : ''}" data-module="${item.id}">
+                <div class="module-header" onclick="toggleModule('${item.id}')">
+                    <div class="module-info">
+                        <div class="module-number ${isCompleted ? 'completed' : ''}" style="font-size:1.1rem;">${isCompleted ? '✓' : item.icon}</div>
+                        <div>
+                            <div class="module-title">${item.title}</div>
+                            <div class="module-progress-text">${done}/${total} erledigt</div>
+                        </div>
+                    </div>
+                    <div class="module-chevron">›</div>
+                </div>
+                <div class="module-progress-bar">
+                    <div class="module-progress-fill" style="width:${pct}%"></div>
+                </div>
+                <div class="tasks-list">
+                    ${item.tasks.map(task => {
+                        const checked = state.completed[task.id];
+                        return `
+                        <div class="task-item ${checked ? 'completed' : ''}">
+                            <div class="task-checkbox ${checked ? 'checked' : ''}"
+                                 onclick="toggleTask('${task.id}', event)"></div>
+                            <a href="${task.url}" target="_blank" class="task-link">
+                                ${task.title}
+                                <span class="task-external">↗</span>
+                            </a>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        } else {
+            // Platzhalter
+            html += `
+            <div class="placeholder-card">
+                <div class="placeholder-icon">${item.icon}</div>
+                <div class="placeholder-title">${item.title}</div>
+                <div class="placeholder-badge">Demnächst</div>
+            </div>`;
+        }
     });
 
     html += `<a href="${APP_DATA.boardsLinks.daily}" target="_blank" class="boards-link" style="margin-top:0.5rem;">📋 Alle Boards öffnen ↗</a>`;
