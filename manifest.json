@@ -4,7 +4,7 @@
     "description": "Onboarding-App für neue FrischepartnerInnen",
     "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#f0faf4",
+    "background_color": "#ffffff",
     "theme_color": "#2d6a4f",
     "orientation": "portrait-primary",
     "icons": [
